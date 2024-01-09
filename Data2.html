@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous" />
+</head>
+
+<!-- add user delete user edit user filter -->
+
+<body onload="myData()">
+    <div class="container">
+        <button class="btn btn-success" onclick="showPopup()">Add User</button>
+
+        <select id="degree" onchange="getFilteredDegree()">
+            <option>All</option>
+            <option>bca</option>
+            <option> btech</option>
+        </select>
+        <input
+				type="text"
+				placeholder="search"
+				id="search"
+				onchange="searchData()"
+			/>
+
+        <h2 class="text-center">Users</h2>
+        <div id="wrapper"></div>
+        <div id="popup">
+            <div class="text-right"><button onclick="closePopup()">X</button></div>
+            <h4 class="text-center">Add Users</h4>
+
+            <div class="form-group">
+                <input type="text" placeholder="Username" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="number" placeholder="Age" id="age" class="form-control">
+            </div>
+            <div class="submit btn btn-primary" onclick="addUser()">Submit!</div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    function myData() {
+
+        temp = -1;
+        selectedIndex = -1;
+        users = [
+
+
+            {
+                id: 1,
+                name: "amir",
+                age: 18,
+                class: "bca"
+            },
+            {
+                id: 2,
+                name: "aqsa",
+                age: 18,
+                class: "bca"
+            },
+            {
+                id: 3,
+                name: "Sahana",
+                age: 20,
+                class: "btech"
+            },
+            {
+                id: 4,
+                name: "Mehak",
+                age: 21,
+                class: "bca"
+            },
+            {
+                id: 5,
+                name: "Aima",
+                age: 22,
+                class: "btech"
+            },
+            {
+                id: 6,
+                name: "Farheen",
+                age: 23,
+                class: "btech"
+            },
+            {
+                id: 7,
+                name: "Azal",
+                age: 10,
+                class: "bca"
+            },
+            {
+                id: 8,
+                name: "Asmara",
+                age: 11,
+                class: "bca"
+            },
+            {
+                id: 9,
+                name: "Zara",
+                age: 12,
+                class: "btech"
+            },
+        ];
+        getData();
+    }
+
+    function getData() {
+        temp = ``;
+        temp += `<table  class='table '>
+        <tr>
+            <th> id   </th> 
+            <th> Name   </th>
+            <th> age   </th>
+            <th> Class   </th>
+            <th> Delete   </th>
+            <th> Edit   </th>
+
+            </tr>`;
+        users.forEach((user, index) => {
+            temp += `  <tr>
+                    <td> ${user.id}   </td> 
+                    <td> ${user.name}   </td>
+                    <td> ${user.age}   </td>
+                    <td> ${user.class}   </td>
+                    <td> <button class='btn btn-danger' onclick='deleteUser(${index})'> Delete</button>  </td>
+                    <td> <button class='btn btn-info' onclick='editUser(${index})'> edit</button>  </td>
+                    
+                    </tr>`;
+        });
+        temp += `</table>`;
+        document.getElementById("wrapper").innerHTML = temp;
+    }
+
+    function showPopup() {
+        document.getElementById("popup").style.visibility = "visible";
+        temp = 1;
+    }
+
+    function closePopup() {
+        document.getElementById("popup").style.visibility = "hidden";
+    }
+
+
+    function editUser(index) {
+        selectedIndex = index;
+
+        document.getElementById("popup").style.visibility = "visible";
+        document.getElementById("name").value = users[index].name;
+        document.getElementById("age").value = users[index].age;
+        temp = 2;
+        // temp=0;//edit
+
+
+
+    }
+
+    function addUser() {
+
+        if (temp == 1) {
+            n = document.getElementById("name").value;
+            a = document.getElementById("age").value;
+            // alert(n+a);
+            id = users[users.length - 1].id + 1;
+            obj = {
+                name: n,
+                age: a,
+                id: id,
+                class: "btech"
+            };
+            users.push(obj);
+            getData();
+            closePopup();
+        } else if (temp == 2) {
+
+            n = document.getElementById("name").value;
+            a = document.getElementById("age").value;
+            id = users[selectedIndex].id;
+            obj = {
+                name: n,
+                age: a,
+                id: id,
+                class: "btech"
+            };
+
+            users.splice(selectedIndex, 1, obj);
+            closePopup();
+            getData();
+
+
+        }
+    }
+
+    function deleteUser(index) {
+        users.splice(index, 1);
+        getData();
+    }
+
+    function getFilteredDegree() {
+        myData();
+        degree = document.getElementById("degree").value;
+        if (degree != "All") {
+            users = users.filter((user) => {
+                return user.class == degree;
+
+
+            })
+        }
+        getData();
+
+    }
+
+    function searchData(){
+        item=document.getElementById("search").value;
+        myData();
+        if(item!="All" && item!="all"){
+        users=users.filter((user) => {
+            return user.class ==item ||user.age == item || user.name == item;
+        });
+    }
+
+        getData();
+    }
+</script>
+<style>
+    #popup {
+        background-color: whitesmoke;
+        position: fixed;
+        left: 30%;
+        right: 30%;
+        top: 5%;
+        padding: 30px;
+        visibility: hidden;
+    }
+</style>
